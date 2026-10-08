@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+
+    <style>
+        #hangmanImage {
+            width: 300px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Hangman Game</h1>
+
+    <div>
+        <h2>Letters</h2>
+
+        <button onclick="guessLetter('A')">A</button>
+        <button onclick="guessLetter('B')">B</button>
+        <button onclick="guessLetter('C')">C</button>
+        <button onclick="guessLetter('D')">D</button>
+        <button onclick="guessLetter('E')">E</button>
+        <button onclick="guessLetter('F')">F</button>
+        <button onclick="guessLetter('G')">G</button>
+        <button onclick="guessLetter('H')">H</button>
+        <button onclick="guessLetter('I')">I</button>
+        <button onclick="guessLetter('J')">J</button>
+        <button onclick="guessLetter('K')">K</button>
+        <button onclick="guessLetter('L')">L</button>
+        <button onclick="guessLetter('M')">M</button>
+        <button onclick="guessLetter('N')">N</button>
+        <button onclick="guessLetter('O')">O</button>
+        <button onclick="guessLetter('P')">P</button>
+        <button onclick="guessLetter('Q')">Q</button>
+        <button onclick="guessLetter('R')">R</button>
+        <button onclick="guessLetter('S')">S</button>
+        <button onclick="guessLetter('T')">T</button>
+        <button onclick="guessLetter('U')">U</button>
+        <button onclick="guessLetter('V')">V</button>
+        <button onclick="guessLetter('W')">W</button>
+        <button onclick="guessLetter('X')">X</button>
+        <button onclick="guessLetter('Y')">Y</button>
+        <button onclick="guessLetter('Z')">Z</button>
+    </div>
+
+    <div>
+        <h2>Hangman</h2>
+        <img id="hangmanImage" src="hangman_stage_1.png" alt="Hangman">
+    </div>
+
+    <div>
+        <h2>Hidden Word</h2>
+        <p id="hiddenWord"></p>
+    </div>
+
+    <p>Guesses: <span id="guesses">0</span></p>
+    <p>Wrong: <span id="wrong">0</span></p>
+    <p>Trials Left: <span id="trialsLeft">6</span></p>
+
+    <p id="gameMessage"></p>
+
+    <button onclick="resetGame()">Reset Game</button>
+    <button onclick="endGame()">End Game</button>
+
+    <script>
+        let secretWord = "HANGMAN";
+        let guessedLetters = [];
+        let guesses = 0;
+        let wrongGuesses = 0;
+        let trialsLeft = 6;
+        let gameOver = false;
+
+        function displayWord() {
+            let word = "";
+
+            for (let letter of secretWord) {
+                if (guessedLetters.includes(letter)) {
+                    word += letter + " ";
+                } else {
+                    word += "_ ";
+                }
+            }
+
+            document.getElementById("hiddenWord").textContent = word;
+        }
+
+        function guessLetter(letter) {
+            if (gameOver || guessedLetters.includes(letter)) {
+                return;
+            }
+
+            guessedLetters.push(letter);
+            guesses++;
+
+            if (secretWord.includes(letter)) {
+                displayWord();
+
+                if (checkWin()) {
+                    gameOver = true;
+                    document.getElementById("gameMessage").textContent =
+                        "You won!";
+                }
+            } else {
+                wrongGuesses++;
+                trialsLeft--;
+
+                document.getElementById("hangmanImage").src =
+                    "hangman_stage_" + (wrongGuesses + 1) + ".png";
+
+                if (trialsLeft === 0) {
+                    gameOver = true;
+                    document.getElementById("gameMessage").textContent =
+                        "You lost! The word was " + secretWord + ".";
+                }
+            }
+
+            document.getElementById("guesses").textContent = guesses;
+            document.getElementById("wrong").textContent = wrongGuesses;
+            document.getElementById("trialsLeft").textContent = trialsLeft;
+
+            console.log("Guessed:", letter);
+        }
+
+        function checkWin() {
+            for (let letter of secretWord) {
+                if (!guessedLetters.includes(letter)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function resetGame() {
+            guessedLetters = [];
+            guesses = 0;
+            wrongGuesses = 0;
+            trialsLeft = 6;
+            gameOver = false;
+
+            document.getElementById("hangmanImage").src =
+                "hangman_stage_1.png";
+
+            document.getElementById("guesses").textContent = 0;
+            document.getElementById("wrong").textContent = 0;
+            document.getElementById("trialsLeft").textContent = 6;
+            document.getElementById("gameMessage").textContent = "";
+
+            displayWord();
+        }
+
+        function endGame() {
+            gameOver = true;
+
+            document.getElementById("gameMessage").textContent =
+                "Game ended.";
+        }
+
+        displayWord();
+    </script>
+
+</body>
+</html>
